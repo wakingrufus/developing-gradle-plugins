@@ -1,69 +1,130 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+    <title>reveal.js</title>
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/black.css">
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Title Slide</section>
-				<section>About Me</section>
-				<section>About GrubHub</section>
-				<section>About You</section>
-				<section>The Problem</section>
-				<section>
-					<section>The Solution</section>
-					<section>Gradle lifecycle</section>
-					<section>buildSrc: your incubator</section>
-					<section>Kotlin DSL</section>
-				</section>
-				<section>
-					<section>What plugins can do</section>
-					<section>Apply Other Plugins</section>
-					<section>Create Tasks</section>
-					<section>Configure repositories / dependencies</section>
-				</section>
-				<section>
-					<section>Custom Task Best Practices</section>
-				</section>
-				<section>
-					<section>Plugin Best Practices</section>
-					<section>Avoid afterEvaluate</section>
-					<section>Extensions vs Properties</section>
-				</section>
-				<section>
-					<section>Testing</section>
-				</section>
-				<section>
-					<section>Custom Wrapper</section>
-				</section>
-			</div>
-		</div>
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+    <style>
+        .grid-area {
+            display: grid;
+            grid-auto-flow: column;
+        }
+        .reveal pre code {
+            max-height: none;
+        }
+        .reveal pre {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h1>Gradle Plugins</h1>
+        </section>
+        <section>About Me</section>
+        <section>About GrubHub</section>
+        <section>About You</section>
+        <section>
+            <section data-timing="120">
+                <h1>The Problem</h1>
+                <div class="grid-area">
+                    <div class="fragment">
+                        <h3>Maven</h3>
+                        <ul>
+                            <li>Declarative via XML</li>
+                            <li>Extended with Plugins</li>
+                        </ul>
+                    </div>
+                    <div class="fragment">
+                        <h3>Gradle</h3>
+                        <ul>
+                            <li>DSL</li>
+                            <li>Extended with Plugins</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Shhh, these are your private notes 📝
+                </aside>
+            </section>
+            <section>
+                <h1>DSL</h1>
+                <pre class="groovy"><code  height="400" data-trim data-noescape>
+plugins {
+  id "java"
+  id "jacoco"
+}
+repositories {
+  mavenCentral()
+}
+dependencies {
+  implementations("commons-io:commons-io:2.7")
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.+")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.+")
+  testImplementation("org.junit.jupiter:junit-jupiter-params:5.4.+")
+  testImplementation("org.assertj:assertj-core:3.23.1")
+}
+test {
+  useJUnitPlatform()
+}
+
+                </code></pre>
+            </section>
+        </section>
+        <section>
+            <section>The Solution</section>
+            <section>Gradle lifecycle</section>
+            <section>buildSrc: your incubator</section>
+            <section>Kotlin DSL</section>
+        </section>
+        <section>
+            <section>What plugins can do</section>
+            <section>Apply Other Plugins</section>
+            <section>Create Tasks</section>
+            <section>Configure repositories / dependencies</section>
+        </section>
+        <section>
+            <section>Custom Task Best Practices</section>
+        </section>
+        <section>
+            <section>Plugin Best Practices</section>
+            <section>Avoid afterEvaluate</section>
+            <section>Extensions vs Properties</section>
+        </section>
+        <section>
+            <section>Custom Wrapper</section>
+        </section>
+    </div>
+</div>
+
+<script src="dist/reveal.js"></script>
+<script src="plugin/notes/notes.js"></script>
+<script src="plugin/markdown/markdown.js"></script>
+<script src="plugin/highlight/highlight.js"></script>
+<script>
 			// More info about initialization & config:
 			// - https://revealjs.com/initialization/
 			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
-
+				defaultTiming: 120,
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});
-		</script>
-	</body>
+
+
+
+</script>
+</body>
 </html>
