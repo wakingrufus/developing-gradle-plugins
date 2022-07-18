@@ -17,9 +17,11 @@
             display: grid;
             grid-auto-flow: column;
         }
+
         .reveal pre code {
             max-height: none;
         }
+
         .reveal pre {
             width: 100%;
         }
@@ -37,8 +39,30 @@
         <section>
             <section data-timing="120">
                 <h1>The Problem</h1>
+                <aside class="notes">
+                    Every team has just one person who actually understand the buildscripts. if you are lucky, 2.
+                    usually it starts when something breaks,
+                    and 1 person figures out how to fix it, and in doing so they learn about how it works.
+                    then next time something breaks, the person it breaks for gets frustrated b/c they just want their
+                    code to run dangit!
+                    not understanding the arcane workings of a build tool.
+                    so after trying and failing a few times, they just go to the person who fixed it before, and they
+                    figure it out
+                    and this happens again and again,
+                    until the fixer is spending most of their time just fixing people problems instead of doing their
+                    real job
+                    but then before they realize it buildscripts ARE their real job
+                    and all of a sudden they are on stage talking to a bunch of people about gradle plugins!
+                </aside>
+
+            </section>
+            <section data-timing="120">
+                <h2>Not everyone should NEED to know how the buildscripts work</h2>
+            </section>
+            <section data-timing="120">
                 <div class="grid-area">
                     <div class="fragment">
+                        <h2>Maven vs Gradle</h2>
                         <h3>Maven</h3>
                         <ul>
                             <li>Declarative via XML</li>
@@ -54,12 +78,16 @@
                     </div>
                 </div>
                 <aside class="notes">
-                    Shhh, these are your private notes 📝
+                    with either tool, we can use plugins to abstract away complexity and follow DRY principles
+                    but the gradle DSL is a blessing and a curse
                 </aside>
             </section>
             <section>
                 <h1>DSL</h1>
-                <pre class="groovy"><code  height="400" data-trim data-noescape>
+                <aside class="notes">
+                    Here, the DSL looks very declarative great right?
+                </aside>
+                <pre class="groovy"><code data-trim data-noescape>
 plugins {
   id "java"
   id "jacoco"
@@ -81,9 +109,50 @@ test {
 
                 </code></pre>
             </section>
+            <section>
+                <h1>DSL</h1>
+                <aside class="notes">
+                    But say we need something a little custom
+                    This is a real customization of the dependencyUpdates plugin.
+                    This is not declarative. There is a lot of code here. complexity. regex!
+                    so someone writes this, then everyone else copies this magical incantation,
+                    and if you ever want to change it, you have 1000 places you need to change it.
+                </aside>
+                <pre class="groovy"><code data-trim data-noescape>
+def isNonStable = { String version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA']
+        .any { it -> version.toUpperCase().contains(it) }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
+}
+def excludeList = ["guice", "guava"]
+tasks.named("dependencyUpdates").configure {
+    resolutionStrategy {
+        componentSelection {
+            all {
+                if (isNonStable(it.candidate.version)) {
+                    reject('Release candidate')
+                } else if (excludeList.contains(it.candidate.module)){
+                    reject('dependency excluded from upgrades')
+                }
+            }
+        }
+    }
+}
+
+                </code></pre>
+            </section>
         </section>
         <section>
-            <section>The Solution</section>
+            <section>
+                <h1>Gradle Plugins</h1>
+                <aside class="notes">
+                    So a gradle plugin can help you encapsulate shared/standard/convential logic
+                    make it reusable, DRY
+                    the DSL is a slipperly slope, so when do you use plugins?
+                    for anything that is not able to be done declaratively in the DSL.
+                </aside>
+            </section>
             <section>Gradle lifecycle</section>
             <section>buildSrc: your incubator</section>
             <section>Kotlin DSL</section>
@@ -125,6 +194,7 @@ test {
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});
+
 </script>
 </body>
 </html>
