@@ -25,6 +25,13 @@
         .reveal pre {
             width: 100%;
         }
+
+        .inline-image img {
+            margin: 0;
+        }
+        .inline-image {
+            display: inline-flex;
+        }
     </style>
 </head>
 <body>
@@ -33,7 +40,21 @@
         <section>
             <h1>Gradle Plugins</h1>
         </section>
-        <section>About Me</section>
+        <section>
+            <h1>About Me</h1>
+            <aside class="notes">
+                You can also find me on the Chicago Tech and Kotlin slacks and the CJUG discord
+            </aside>
+            <h3>John Burns</h3>
+            <div class="grid-area">
+                <div style="text-align: left">
+                    <p>Staff Engineer @ GrubHub</p>
+                    <p>CKUG Co-Organizer</p>
+                    <p class="inline-image"><img src="Twitter-Logo.png" height="48" width="48"/><span style="padding-left: .5em">@wakingrufus</span></p>
+                    <p class="inline-image"><img src="fediverse.png" height="48" width="48"/><span style="padding-left: .5em">@wakingrufus@mastodon.technology</span></p>
+                </div>
+            </div>
+        </section>
         <section>About GrubHub</section>
         <section>About You</section>
         <section>
@@ -54,15 +75,14 @@
                     but then before they realize it buildscripts ARE their real job
                     and all of a sudden they are on stage talking to a bunch of people about gradle plugins!
                 </aside>
-
             </section>
             <section data-timing="120">
                 <h2>Not everyone should NEED to know how the buildscripts work</h2>
             </section>
             <section data-timing="120">
+                <h2>Maven vs Gradle</h2>
                 <div class="grid-area">
                     <div class="fragment">
-                        <h2>Maven vs Gradle</h2>
                         <h3>Maven</h3>
                         <ul>
                             <li>Declarative via XML</li>
@@ -185,15 +205,15 @@ tasks.named("dependencyUpdates").configure {
 <script src="plugin/markdown/markdown.js"></script>
 <script src="plugin/highlight/highlight.js"></script>
 <script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
-				defaultTiming: 120,
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+        hash: true,
+        defaultTiming: 120,
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
 
 </script>
 </body>
