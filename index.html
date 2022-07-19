@@ -40,7 +40,7 @@
         <section>
             <h1>Gradle Plugins</h1>
         </section>
-        <section>
+        <section data-timing="60">
             <h1>About Me</h1>
             <aside class="notes">
                 You can also find me on the Chicago Tech and Kotlin slacks and the CJUG discord
@@ -50,8 +50,8 @@
                 <div style="text-align: left">
                     <p>Staff Engineer @ GrubHub</p>
                     <p>CKUG Co-Organizer</p>
-                    <p class="inline-image"><img src="Twitter-Logo.png" height="48" width="48"/><span style="padding-left: .5em">@wakingrufus</span></p>
-                    <p class="inline-image"><img src="fediverse.png" height="48" width="48"/><span style="padding-left: .5em">@wakingrufus@mastodon.technology</span></p>
+                    <p class="inline-image"><img alt="twitter logo" src="Twitter-Logo.png" height="48" width="48"/><span style="padding-left: .5em">@wakingrufus</span></p>
+                    <p class="inline-image"><img alt="fediverse logo" src="fediverse.png" height="48" width="48"/><span style="padding-left: .5em">@wakingrufus@mastodon.technology</span></p>
                 </div>
             </div>
         </section>
@@ -159,23 +159,88 @@ tasks.named("dependencyUpdates").configure {
         }
     }
 }
+                </code></pre>
+            </section>
+            <section>
+                <h1>DSL</h1>
+                <aside class="notes">
+                    A gradle plugin can help you encapsulate shared/standard/conventional logic
+                    make it reusable, DRY
+                    the DSL is a slippery slope, so when do you use plugins?
+                    for anything that is repeated in multiple project's build scripts
+                    when everything is pluginified, then scripts are declarative
+                    Before we talk about how to make a plugin, we first need to understand how gradle works
+                </aside>
+                <pre class="groovy"><code data-trim data-noescape>
+                plugins {
+                  id "java"
+                  id "jacoco"
+                  id "com.myorg.gradle.depupdates"
+                }
+                repositories {
+                  mavenCentral()
+                }
+                dependencies {
+                  implementations("commons-io:commons-io:2.7")
 
+                  testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.+")
+                  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.+")
+                  testImplementation("org.junit.jupiter:junit-jupiter-params:5.4.+")
+                  testImplementation("org.assertj:assertj-core:3.23.1")
+                }
+                test {
+                  useJUnitPlatform()
+                }
                 </code></pre>
             </section>
         </section>
         <section>
             <section>
-                <h1>Gradle Plugins</h1>
+                <h1>Gradle lifecycle</h1>
                 <aside class="notes">
-                    So a gradle plugin can help you encapsulate shared/standard/convential logic
-                    make it reusable, DRY
-                    the DSL is a slipperly slope, so when do you use plugins?
-                    for anything that is not able to be done declaratively in the DSL.
+                    Gradle builds run in 3 phases
+                    buildSrc is your incubator. it is a great place to try writing custom tasks and plugins before pulling them out to a separate codebase / artifact
                 </aside>
+                <div class="grid-area">
+                    <div class="fragment">
+                        <h4>Initialization</h4>
+                        <ul>
+                            <li>buildSrc</li>
+                            <li>init scripts</li>
+                            <li>settings.gradle</li>
+                        </ul>
+                    </div>
+                    <div class="fragment">
+                        <h4>Configuration</h4>
+                        <ul>
+                            <li>Plugins</li>
+                            <li>Build scripts</li>
+                        </ul>
+                    </div>
+                    <div class="fragment">
+                        <h4>Execution</h4>
+                        <ul>
+                            <li>Tasks</li>
+                        </ul>
+                    </div>
+                </div>
             </section>
-            <section>Gradle lifecycle</section>
-            <section>buildSrc: your incubator</section>
-            <section>Kotlin DSL</section>
+        </section>
+        <section>
+            <section>
+                <h1>Groovy or Kotlin?</h1>
+                <p class="fragment">Basic scripts: doesn't matter</p>
+                <p class="fragment">Complex scripts: Groovy</p>
+                <p class="fragment">Plugins: Kotlin</p>
+            </section>
+            <section>
+                <h1>Groovy DSL</h1>
+                <img src="groovy-dsl.png">
+            </section>
+            <section>
+                <h1>Kotlin DSL</h1>
+                <img src="kotlin-dsl.png">
+            </section>
         </section>
         <section>
             <section>What plugins can do</section>
