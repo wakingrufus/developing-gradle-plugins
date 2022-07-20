@@ -229,6 +229,9 @@ tasks.named("dependencyUpdates").configure {
         <section>
             <section>
                 <h1>Groovy or Kotlin?</h1>
+                <aside class="notes">
+                    When targeting many major versions of gradle, you may want to avoid kotlin to avoid kotlin language incompatibilities
+                </aside>
                 <p class="fragment">Basic scripts: doesn't matter</p>
                 <p class="fragment">Complex scripts: Groovy</p>
                 <p class="fragment">Plugins: Kotlin</p>
@@ -240,6 +243,68 @@ tasks.named("dependencyUpdates").configure {
             <section>
                 <h1>Kotlin DSL</h1>
                 <img src="kotlin-dsl.png">
+            </section>
+        </section>
+        <section>
+            <section>
+                <h1>Tasks</h1>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+                    abstract class ScalaStyleConfigFileTask : DefaultTask() {
+                      @TaskAction
+                      fun doWork(){
+                      }
+                    }
+                </code></pre>
+            </section>
+            <section>
+                <h1>Properties</h1>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+                    abstract class ScalaStyleConfigFileTask : DefaultTask() {
+                        @get:OutputDirectory
+                        abstract val outputDirectory: Property&lt;File>
+
+                        @get:OutputFile
+                        abstract val outputFile: Property&lt;File>
+
+                        @get:InputFile
+                        abstract val inputFile: Property&lt;File>
+
+                        @get:InputDirectory
+                        abstract val inputDirectory: Property&lt;File>
+
+                        @get:Input
+                        abstract val input: Property&lt;String>
+
+                        @TaskAction
+                        fun doWork(){
+                        }
+                    }
+                </code></pre>
+            </section>
+            <section>
+                <h1>Companion Object</h1>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+                    abstract class MyTask : DefaultTask() {
+                        companion object {
+                            @JvmStatic
+                            fun create(
+                                    project: Project,
+                                    taskName: String = "myTask"): MyTask {
+                                return project.tasks.create&lt;MyTask>(taskName).apply {
+                                    outputs.upToDateWhen { false }
+                                    outputFile.set(input.map {
+                                        project.buildDir.resolve("$it.txt")
+                                    })
+                                    input.convention("name")
+                                    inputFile.convention("input.txt")
+                                    project.extensions.findByType&lt;MyExtension>()?.also {
+                                        input.set(it.myTaskOutputName)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                </code></pre>
             </section>
         </section>
         <section>
