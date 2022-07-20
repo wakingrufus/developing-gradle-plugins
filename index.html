@@ -56,7 +56,12 @@
             </div>
         </section>
         <section>About GrubHub</section>
-        <section>About You</section>
+        <section data-timing="180">
+            <h1>About You</h1>
+            <p class="fragment">Gradle Users</p>
+            <p class="fragment">Plugin Authors</p>
+            <p class="fragment">Terrified of Gradle</p>
+        </section>
         <section>
             <section data-timing="120">
                 <h1>The Problem</h1>
@@ -249,7 +254,7 @@ tasks.named("dependencyUpdates").configure {
             <section>
                 <h1>Tasks</h1>
                 <pre class="kotlin fragment"><code data-trim data-noescape>
-                    abstract class ScalaStyleConfigFileTask : DefaultTask() {
+                    abstract class MyTask : DefaultTask() {
                       @TaskAction
                       fun doWork(){
                       }
@@ -258,8 +263,12 @@ tasks.named("dependencyUpdates").configure {
             </section>
             <section>
                 <h1>Properties</h1>
+                <aside class="notes">
+                    Annotate inputs/outputs
+                    Use Properties
+                </aside>
                 <pre class="kotlin fragment"><code data-trim data-noescape>
-                    abstract class ScalaStyleConfigFileTask : DefaultTask() {
+                    abstract class MyTask : DefaultTask() {
                         @get:OutputDirectory
                         abstract val outputDirectory: Property&lt;File>
 
@@ -308,13 +317,57 @@ tasks.named("dependencyUpdates").configure {
             </section>
         </section>
         <section>
-            <section>What plugins can do</section>
-            <section>Apply Other Plugins</section>
-            <section>Create Tasks</section>
+            <section>
+                <h1>Plugins</h1>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+                    abstract class MyPlugin : DefaultTask() {
+                      @TaskAction
+                      fun doWork(){
+                      }
+                    }
+                </code></pre>
+            </section>
+            <section>
+                <h1>Extensions</h1>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+                    abstract class MyPlugin : DefaultTask() {
+                      @TaskAction
+                      fun doWork(){
+                      }
+                    }
+                </code></pre>
+            </section>
+            <section>
+                <h1>Plugin with Extension</h1>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+                    abstract class MyPlugin : DefaultTask() {
+                      @TaskAction
+                      fun doWork(){
+                      }
+                    }
+                </code></pre>
+            </section>
+            <section>
+                <h1>Create Tasks</h1>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+                    abstract class MyPlugin : DefaultTask() {
+                      @TaskAction
+                      fun doWork(){
+                      }
+                    }
+                </code></pre>
+            </section>
+            <section>
+                <h1>Apply Other Plugins</h1>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+                    abstract class MyPlugin : DefaultTask() {
+                      @TaskAction
+                      fun doWork(){
+                      }
+                    }
+                </code></pre>
+            </section>
             <section>Configure repositories / dependencies</section>
-        </section>
-        <section>
-            <section>Custom Task Best Practices</section>
         </section>
         <section>
             <section>Plugin Best Practices</section>
