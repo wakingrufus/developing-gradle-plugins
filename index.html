@@ -29,6 +29,7 @@
         .inline-image img {
             margin: 0;
         }
+
         .inline-image {
             display: inline-flex;
         }
@@ -50,8 +51,10 @@
                 <div style="text-align: left">
                     <p>Staff Engineer @ GrubHub</p>
                     <p>CKUG Co-Organizer</p>
-                    <p class="inline-image"><img alt="twitter logo" src="Twitter-Logo.png" height="48" width="48"/><span style="padding-left: .5em">@wakingrufus</span></p>
-                    <p class="inline-image"><img alt="fediverse logo" src="fediverse.png" height="48" width="48"/><span style="padding-left: .5em">@wakingrufus@mastodon.technology</span></p>
+                    <p class="inline-image"><img alt="twitter logo" src="Twitter-Logo.png" height="48" width="48"/><span
+                            style="padding-left: .5em">@wakingrufus</span></p>
+                    <p class="inline-image"><img alt="fediverse logo" src="fediverse.png" height="48" width="48"/><span style="padding-left: .5em">@wakingrufus@mastodon.technology</span>
+                    </p>
                 </div>
             </div>
         </section>
@@ -204,7 +207,8 @@ tasks.named("dependencyUpdates").configure {
                 <h1>Gradle lifecycle</h1>
                 <aside class="notes">
                     Gradle builds run in 3 phases
-                    buildSrc is your incubator. it is a great place to try writing custom tasks and plugins before pulling them out to a separate codebase / artifact
+                    buildSrc is your incubator. it is a great place to try writing custom tasks and plugins before pulling them out to a separate codebase /
+                    artifact
                 </aside>
                 <div class="grid-area">
                     <div class="fragment">
@@ -292,6 +296,16 @@ tasks.named("dependencyUpdates").configure {
             </section>
             <section>
                 <h1>Companion Object</h1>
+                <aside class="notes">
+                    for tasks that usually are only created once per project,
+                    put a companion object in the Task class (kotlin) with a JvmStatic method that takes a project,
+                    and registers the task, then applies all the default opinions,
+                    just to make the plugin code simpler for the default case.
+                    and then you can always just register the task the regular way if you want one with no opinions
+                    you could do a similar thing with a static method in groovy/java
+                    that kind of spiritually aligns with the "use static methods instead of public constructors" advice from effective Java
+                    without sacrificing the idiom of not hard-coding opinions on tasks/extensions
+                </aside>
                 <pre class="kotlin fragment"><code data-trim data-noescape>
                     abstract class MyTask : DefaultTask() {
                         companion object {
@@ -318,61 +332,141 @@ tasks.named("dependencyUpdates").configure {
         </section>
         <section>
             <section>
-                <h1>Plugins</h1>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
-                    abstract class MyPlugin : DefaultTask() {
-                      @TaskAction
-                      fun doWork(){
-                      }
-                    }
-                </code></pre>
-            </section>
-            <section>
                 <h1>Extensions</h1>
                 <pre class="kotlin fragment"><code data-trim data-noescape>
-                    abstract class MyPlugin : DefaultTask() {
-                      @TaskAction
-                      fun doWork(){
-                      }
+                    open class MyExtension(objects: ObjectFactory) {
+                        companion object {
+                            @JvmStatic
+                            fun create(project: Project): MyExtension {
+                                return project.extensions.create&lt;MyExtension>("my")
+                                    .apply { name.convention(project.rootProject.name) }
+                            }
+                        }
+
+                        val name: Property&lt;String> = objects.property(String::class.java)
+
+                        fun name(newName: String) {
+                            name.set(newName)
+                        }
                     }
                 </code></pre>
             </section>
             <section>
-                <h1>Plugin with Extension</h1>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
-                    abstract class MyPlugin : DefaultTask() {
-                      @TaskAction
-                      fun doWork(){
-                      }
+                <h2>Extension Usage</h2>
+                <pre class="groovy fragment"><code data-trim data-noescape>
+                    my {
+                        name("customName")
                     }
                 </code></pre>
             </section>
-            <section>
-                <h1>Create Tasks</h1>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
-                    abstract class MyPlugin : DefaultTask() {
-                      @TaskAction
-                      fun doWork(){
-                      }
-                    }
-                </code></pre>
-            </section>
-            <section>
-                <h1>Apply Other Plugins</h1>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
-                    abstract class MyPlugin : DefaultTask() {
-                      @TaskAction
-                      fun doWork(){
-                      }
-                    }
-                </code></pre>
-            </section>
-            <section>Configure repositories / dependencies</section>
         </section>
         <section>
-            <section>Plugin Best Practices</section>
-            <section>Avoid afterEvaluate</section>
-            <section>Extensions vs Properties</section>
+            <section>
+                <h1>Plugins</h1>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+class MyPlugin : Plugin&lt;Project> {
+    override fun apply(project: Project) {
+    }
+}
+                </code></pre>
+            </section>
+            <section>
+                <h2>Tasks & Extensions</h2>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+class MyPlugin : Plugin&lt;Project> {
+    override fun apply(project: Project) {
+        val ext = MyExtension.create(project)
+        val task = MyTask.create(project)
+    }
+}
+                </code></pre>
+            </section>
+            <section>
+                <h2>Apply Other Plugins</h2>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+class MyPlugin : Plugin&lt;Project> {
+    override fun apply(project: Project) {
+        project.pluginManager.apply(JavaPlugin::class.java)
+    }
+}
+                </code></pre>
+            </section>
+            <section>
+                <h2>React to Other Plugins</h2>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+class MyPlugin : Plugin&lt;Project> {
+    override fun apply(project: Project) {
+        project.pluginManager.withType(JavaPlugin::class) {
+            project.repositories {
+                maven("https://my.custom.repo.com"){
+                    credentials {
+                        username = System.getenv("ARTIFACTORY_USER")
+                        password = System.getenv("ARTIFACTORY_PASS")
+                    }
+                    authentication {
+                        create&lt;BasicAuthentication>("basic")
+                    }
+                }
+            }
+            project.withConvention(JavaPluginConvention::class) {
+                sourceSets.create("customSourceSet"){ configure }
+            }
+        }
+    }
+}
+                </code></pre>
+            </section>
+        </section>
+        <section>
+            <section><h1>Best Practices</h1></section>
+            <section><h2>Avoid afterEvaluate</h2>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+class MyPlugin : Plugin&lt;Project> {
+  override fun apply(project: Project) {
+    val task = MyTask.create(project)
+    project.afterEvaluate {
+      project.tasks
+        .findByName("publishMavenJavaPublicationToMavenRepository")
+        .dependsOn(task)
+    }
+  }
+}
+                </code></pre>
+            </section>
+            <section><h2>Project Properties</h2>
+                <ul>
+                    <li class="fragment">Use extension properties when used in task logic</li>
+                    <li class="fragment">Use project properties when used in plugin logic</li>
+                </ul>
+            </section>
+            <section>
+                <h1>Implementation</h1>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+class MyPlugin : Plugin&lt;Project> {
+    override fun apply(project: Project) {
+        if(!project.hasProperty("my.enabled")
+            || project.property("my.enabled")){
+                    // plugin code
+        }
+    }
+}
+                </code></pre>
+            </section>
+            <section>
+                <h2>Usage</h2>
+                <div class="fragment">
+                    <h3>gradle.properties</h3>
+                    <pre class="properties"><code data-trim data-noescape>
+                    my.enabled=false
+                </code></pre>
+                </div>
+                <div class="fragment">
+                    <h3>Command Line</h3>
+                    <pre class="bash"><code data-trim data-noescape>
+                    ./gradlew -Pmy.enabled=false
+                </code></pre>
+                </div>
+            </section>
         </section>
         <section>
             <section>Testing</section>
