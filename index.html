@@ -38,8 +38,14 @@
 <body>
 <div class="reveal">
     <div class="slides">
-        <section>
+        <section data-timing="20">
             <h1>Gradle Plugins</h1>
+            <img alt="necronomicon but with the gradle logo" src="gradlenomicon.jpg" height="466" width="386">
+            <aside class="notes">
+                Welcome to developing gradle plugins
+                Please, do not be scared off by this book. I have read this book so you don't have to.
+                I can tell you what you need to know and leave out the unspeakable horrors contained within.
+            </aside>
         </section>
         <section data-timing="60">
             <h1>About Me</h1>
@@ -51,42 +57,61 @@
                 <div style="text-align: left">
                     <p>Staff Engineer @ GrubHub</p>
                     <p>CKUG Co-Organizer</p>
-                    <p class="inline-image"><img alt="twitter logo" src="Twitter-Logo.png" height="48" width="48"/><span
-                            style="padding-left: .5em">@wakingrufus</span></p>
-                    <p class="inline-image"><img alt="fediverse logo" src="fediverse.png" height="48" width="48"/><span style="padding-left: .5em">@wakingrufus@mastodon.technology</span>
+                    <p class="inline-image"><img alt="twitter logo" src="Twitter-Logo.png" height="48" width="48"/>
+                        <span style="padding-left: .5em">@wakingrufus</span></p>
+                    <p class="inline-image"><img alt="fediverse logo" src="fediverse.png" height="48" width="48"/>
+                        <span style="padding-left: .5em">@wakingrufus@mastodon.technology</span>
                     </p>
                 </div>
             </div>
         </section>
-        <section>About GrubHub</section>
-        <section data-timing="180">
+        <section data-timing="60">
+            <h1>About GrubHub</h1>
+            <aside class="notes">
+                What I do: Service Platform Engineering: JVM Stewardship
+            </aside>
+        </section>
+        <section data-timing="120">
             <h1>About You</h1>
             <p class="fragment">Gradle Users</p>
             <p class="fragment">Plugin Authors</p>
             <p class="fragment">Terrified of Gradle</p>
+            <aside class="notes">
+                how many use gradle in hobby or work projects
+                plugin authors, or even written a custom gradle task
+                terrified: when you hear the word gradle a feeling of dread washes over you
+                my goal is to encourage more people to fall into that second category.
+                i may or may not be able to do something about the dread though.
+            </aside>
+        </section>
+        <section data-timing="60">
+            <h1>The Problem</h1>
+            <aside class="notes">
+                Every team has just one person who actually understand the buildscripts. if you are lucky, 2.
+                usually it starts when something breaks,
+                and 1 person figures out how to fix it, and in doing so they learn about how it works.
+                then next time something breaks, the person it breaks for gets frustrated b/c they just want their
+                code to run dangit! not understanding the arcane workings of a build tool.
+                so after trying and failing a few times, they just go to the person who fixed it before, and they
+                figure it out
+                and this happens again and again,
+                until the fixer is spending most of their time just fixing people problems instead of doing their
+                real job
+                but then before they realize it buildscripts ARE their real job
+                and all of a sudden they are on stage talking to a bunch of people about gradle plugins!
+            </aside>
+        </section>
+        <section data-timing="60">
+            <h1>The Goal</h1>
+            <p class="fragment">Abstract away the complexity</p>
+            <p class="fragment">Simplify standard usage</p>
+            <p class="fragment">Without preventing customization</p>
+            <aside class="notes">
+                We will discuss how to achieve all of these using gradle plugins.
+                but first, lets get some background about our build tool
+            </aside>
         </section>
         <section>
-            <section data-timing="120">
-                <h1>The Problem</h1>
-                <aside class="notes">
-                    Every team has just one person who actually understand the buildscripts. if you are lucky, 2.
-                    usually it starts when something breaks,
-                    and 1 person figures out how to fix it, and in doing so they learn about how it works.
-                    then next time something breaks, the person it breaks for gets frustrated b/c they just want their
-                    code to run dangit!
-                    not understanding the arcane workings of a build tool.
-                    so after trying and failing a few times, they just go to the person who fixed it before, and they
-                    figure it out
-                    and this happens again and again,
-                    until the fixer is spending most of their time just fixing people problems instead of doing their
-                    real job
-                    but then before they realize it buildscripts ARE their real job
-                    and all of a sudden they are on stage talking to a bunch of people about gradle plugins!
-                </aside>
-            </section>
-            <section data-timing="120">
-                <h2>Not everyone should NEED to know how the buildscripts work</h2>
-            </section>
             <section data-timing="120">
                 <h2>Maven vs Gradle</h2>
                 <div class="grid-area">
@@ -207,7 +232,8 @@ tasks.named("dependencyUpdates").configure {
                 <h1>Gradle lifecycle</h1>
                 <aside class="notes">
                     Gradle builds run in 3 phases
-                    buildSrc is your incubator. it is a great place to try writing custom tasks and plugins before pulling them out to a separate codebase /
+                    buildSrc is your incubator. it is a great place to try writing custom tasks and plugins before
+                    pulling them out to a separate codebase /
                     artifact
                 </aside>
                 <div class="grid-area">
@@ -239,7 +265,8 @@ tasks.named("dependencyUpdates").configure {
             <section>
                 <h1>Groovy or Kotlin?</h1>
                 <aside class="notes">
-                    When targeting many major versions of gradle, you may want to avoid kotlin to avoid kotlin language incompatibilities
+                    When targeting many major versions of gradle, you may want to avoid kotlin to avoid kotlin language
+                    incompatibilities
                 </aside>
                 <p class="fragment">Basic scripts: doesn't matter</p>
                 <p class="fragment">Complex scripts: Groovy</p>
@@ -254,24 +281,28 @@ tasks.named("dependencyUpdates").configure {
                 <img src="kotlin-dsl.png">
             </section>
         </section>
-        <section>
-            <section>
-                <h1>Tasks</h1>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
+        <section data-auto-animate>
+            <h1 data-id="title">Tasks</h1>
+            <aside class="notes">
+                This is a minimal task. The TaskAction is what the task does when it runs.
+                To define inputs and outputs, we use annotated properties
+            </aside>
+            <pre data-id="code" class="kotlin fragment"><code data-trim data-noescape>
                     abstract class MyTask : DefaultTask() {
                       @TaskAction
                       fun doWork(){
                       }
                     }
                 </code></pre>
-            </section>
-            <section>
-                <h1>Properties</h1>
-                <aside class="notes">
-                    Annotate inputs/outputs
-                    Use Properties
-                </aside>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
+        </section>
+        <section data-auto-animate>
+            <h1 data-id="title">Properties</h1>
+            <aside class="notes">
+                Annotate inputs/outputs
+                Use Properties
+                unopinionated
+            </aside>
+            <pre data-id="code" class="kotlin"><code data-trim data-noescape>
                     abstract class MyTask : DefaultTask() {
                         @get:OutputDirectory
                         abstract val outputDirectory: Property&lt;File>
@@ -293,8 +324,9 @@ tasks.named("dependencyUpdates").configure {
                         }
                     }
                 </code></pre>
-            </section>
-            <section>
+        </section>
+        <section>
+            <section data-auto-animate>
                 <h1>Companion Object</h1>
                 <aside class="notes">
                     for tasks that usually are only created once per project,
@@ -303,26 +335,79 @@ tasks.named("dependencyUpdates").configure {
                     just to make the plugin code simpler for the default case.
                     and then you can always just register the task the regular way if you want one with no opinions
                     you could do a similar thing with a static method in groovy/java
-                    that kind of spiritually aligns with the "use static methods instead of public constructors" advice from effective Java
+                    that kind of spiritually aligns with the "use static methods instead of public constructors" advice
+                    from effective Java
                     without sacrificing the idiom of not hard-coding opinions on tasks/extensions
                 </aside>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
+                <pre data-id="code" class="kotlin fragment"><code data-trim data-noescape data-line-numbers>
                     abstract class MyTask : DefaultTask() {
                         companion object {
                             @JvmStatic
-                            fun create(
-                                    project: Project,
-                                    taskName: String = "myTask"): MyTask {
+                            fun create(project: Project,
+                                       taskName: String = "myTask"): MyTask {
                                 return project.tasks.create&lt;MyTask>(taskName).apply {
-                                    outputs.upToDateWhen { false }
+                                    // TODO
+                                }
+                            }
+                      }
+                    }
+                </code></pre>
+            </section>
+            <section data-auto-animate>
+                <h1>Companion Object</h1>
+                <aside class="notes">
+                    set properties and defaults
+                </aside>
+                <pre data-id="code" class="kotlin"><code data-trim data-noescape data-line-numbers="7-10">
+                    abstract class MyTask : DefaultTask() {
+                        companion object {
+                            @JvmStatic
+                            fun create(project: Project,
+                                       taskName: String = "myTask"): MyTask {
+                                return project.tasks.create&lt;MyTask>(taskName).apply {
                                     outputFile.set(input.map {
                                         project.buildDir.resolve("$it.txt")
                                     })
                                     input.convention("name")
-                                    inputFile.convention("input.txt")
-                                    project.extensions.findByType&lt;MyExtension>()?.also {
-                                        input.set(it.myTaskOutputName)
-                                    }
+                                }
+                            }
+                        }
+                    }
+                </code></pre>
+            </section>
+            <section data-auto-animate>
+                <h1>Companion Object</h1>
+                <aside class="notes">
+                    control up-to-date / caching
+                </aside>
+                <pre data-id="code" class="kotlin"><code data-trim data-noescape data-line-numbers="7">
+                    abstract class MyTask : DefaultTask() {
+                        companion object {
+                            @JvmStatic
+                            fun create(project: Project,
+                                       taskName: String = "myTask"): MyTask {
+                                return project.tasks.create&lt;MyTask>(taskName).apply {
+                                    outputs.upToDateWhen { false }
+                                }
+                            }
+                        }
+                    }
+                </code></pre>
+            </section>
+            <section data-auto-animate>
+                <h1>Companion Object</h1>
+                <aside class="notes">
+                    bind properties to extension properties
+                </aside>
+                <pre data-id="code" class="kotlin"><code data-trim data-noescape data-line-numbers="7-9">
+                    abstract class MyTask : DefaultTask() {
+                        companion object {
+                            @JvmStatic
+                            fun create(project: Project,
+                                       taskName: String = "myTask"): MyTask {
+                                return project.tasks.create&lt;MyTask>(taskName).apply {
+                                    project.extensions.findByType&lt;MyExtension>()
+                                        ?.input.set(it.myTaskOutputName)
                                 }
                             }
                         }
@@ -469,10 +554,62 @@ class MyPlugin : Plugin&lt;Project> {
             </section>
         </section>
         <section>
-            <section>Testing</section>
+            <section><h1>Testing</h1></section>
+            <section>
+                <h3>Unit Tests</h3>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+        val rootProject = ProjectBuilder.builder()
+                    .build() as ProjectInternal
+        val subProject = ProjectBuilder.builder()
+                    .withParent(rootProject)
+                    .build() as ProjectInternal
+
+        subProject.plugins.apply(JavaPlugin::class.java)
+        subProject.plugins.apply(MyPlugin::class.java)
+
+        subProject.evaluate()
+        rootProject.evaluate()
+
+        assertThat(subProject.tasks.getByName("myTask")).isNotNull()
+                </code></pre>
+            </section>
+            <section>
+                <h3>Integration Tests</h3>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+    @TempDir @JvmField
+    var testProjectDir: File? = null
+
+    @ParameterizedTest(name = "test pass {arguments}")
+    @EnumSource(SupportedGradleVersion::class)
+    fun `test pass`(gradleVersion: SupportedGradleVersion) {
+        val rootProjectDir = requireNotNull(testProjectDir)
+        rootProjectDir.resolve("build.gradle").apply {
+            createNewFile()
+            writeText("""plugins {
+                    id("java")
+                    id("com.myorg.myplugin")
+                }""".trimMargin()
+            )
+        }
+        val buildResult = GradleRunner.create()
+            .withProjectDir(rootProjectDir)
+            .withPluginClasspath().withArguments("build", "--stacktrace")
+            .withGradleVersion(gradleVersion.versionString)
+            .forwardOutput().build()
+
+        assertThat(buildResult.task(":myTask")?.outcome)
+                .isEqualTo(TaskOutcome.SUCCESS)
+                </code></pre>
+            </section>
         </section>
-        <section>
-            <section>Custom Wrapper</section>
+        <section data-timing="60">
+            <h1>Custom Wrapper</h1>
+            <ul>
+                <li class="fragment">pluginManagement (repo/plugins)</li>
+                <li class="fragment">Gradle Remote Build Cache</li>
+            </ul>
+        </section>
+        <section data-timing="10"><img alt="Red Swingline stapler" src="stapler.png" height="500" width="500"/>
         </section>
     </div>
 </div>
@@ -491,6 +628,7 @@ class MyPlugin : Plugin&lt;Project> {
         // Learn about plugins: https://revealjs.com/plugins/
         plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
     });
+
 
 </script>
 </body>
