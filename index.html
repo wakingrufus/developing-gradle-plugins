@@ -281,53 +281,40 @@ tasks.named("dependencyUpdates").configure {
                 <img src="kotlin-dsl.png">
             </section>
         </section>
-        <section data-auto-animate>
-            <h1 data-id="title">Tasks</h1>
-            <aside class="notes">
-                This is a minimal task. The TaskAction is what the task does when it runs.
-                To define inputs and outputs, we use annotated properties
-            </aside>
-            <pre data-id="code" class="kotlin fragment"><code data-trim data-noescape>
+        <section>
+            <section data-auto-animate>
+                <h1>Tasks</h1>
+                <h3>Workhorse of the Execution phase</h3>
+            </section>
+            <section data-auto-animate>
+                <h1>Tasks</h1>
+                <h3>Inputs -> TaskAction -> Outputs</h3>
+            </section>
+            <section data-auto-animate>
+                <h1 data-id="title">Tasks</h1>
+                <aside class="notes">
+                    The TaskAction is what the task does when it runs.
+                    To define inputs and outputs, we use annotated properties
+                    unopinionated
+                </aside>
+                <pre data-id="code" class="kotlin"><code data-trim data-noescape>
                     abstract class MyTask : DefaultTask() {
-                      @TaskAction
-                      fun doWork(){
-                      }
-                    }
-                </code></pre>
-        </section>
-        <section data-auto-animate>
-            <h1 data-id="title">Properties</h1>
-            <aside class="notes">
-                Annotate inputs/outputs
-                Use Properties
-                unopinionated
-            </aside>
-            <pre data-id="code" class="kotlin"><code data-trim data-noescape>
-                    abstract class MyTask : DefaultTask() {
-                        @get:OutputDirectory
-                        abstract val outputDirectory: Property&lt;File>
-
                         @get:OutputFile
                         abstract val outputFile: Property&lt;File>
 
                         @get:InputFile
                         abstract val inputFile: Property&lt;File>
 
-                        @get:InputDirectory
-                        abstract val inputDirectory: Property&lt;File>
-
-                        @get:Input
-                        abstract val input: Property&lt;String>
-
                         @TaskAction
                         fun doWork(){
+                            outputFile.get().writeText(doThing(inputFile.get()))
                         }
                     }
                 </code></pre>
-        </section>
-        <section>
+            </section>
             <section data-auto-animate>
-                <h1>Companion Object</h1>
+                <h1 data-id="title">Tasks</h1>
+                <h3 data-id="subtitle">Companion Object</h3>
                 <aside class="notes">
                     for tasks that usually are only created once per project,
                     put a companion object in the Task class (kotlin) with a JvmStatic method that takes a project,
@@ -338,6 +325,7 @@ tasks.named("dependencyUpdates").configure {
                     that kind of spiritually aligns with the "use static methods instead of public constructors" advice
                     from effective Java
                     without sacrificing the idiom of not hard-coding opinions on tasks/extensions
+                    set properties and defaults
                 </aside>
                 <pre data-id="code" class="kotlin fragment"><code data-trim data-noescape data-line-numbers>
                     abstract class MyTask : DefaultTask() {
@@ -354,7 +342,8 @@ tasks.named("dependencyUpdates").configure {
                 </code></pre>
             </section>
             <section data-auto-animate>
-                <h1>Companion Object</h1>
+                <h1 data-id="title">Tasks</h1>
+                <h3 data-id="subtitle">Companion Object</h3>
                 <aside class="notes">
                     set properties and defaults
                 </aside>
@@ -376,7 +365,8 @@ tasks.named("dependencyUpdates").configure {
                 </code></pre>
             </section>
             <section data-auto-animate>
-                <h1>Companion Object</h1>
+                <h1 data-id="title">Tasks</h1>
+                <h3 data-id="subtitle">Companion Object</h3>
                 <aside class="notes">
                     control up-to-date / caching
                 </aside>
@@ -395,7 +385,8 @@ tasks.named("dependencyUpdates").configure {
                 </code></pre>
             </section>
             <section data-auto-animate>
-                <h1>Companion Object</h1>
+                <h1 data-id="title">Tasks</h1>
+                <h3 data-id="subtitle">Companion Object</h3>
                 <aside class="notes">
                     bind properties to extension properties
                 </aside>
@@ -416,8 +407,12 @@ tasks.named("dependencyUpdates").configure {
             </section>
         </section>
         <section>
-            <section>
-                <h1>Extensions</h1>
+            <section data-auto-animate>
+                <h1 data-id="title">Extensions</h1>
+                <h3>Exposing configuration to buildscripts</h3>
+            </section>
+            <section data-auto-animate>
+                <h1 data-id="title">Extensions</h1>
                 <pre class="kotlin fragment"><code data-trim data-noescape>
                     open class MyExtension(objects: ObjectFactory) {
                         companion object {
