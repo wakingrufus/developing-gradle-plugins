@@ -77,11 +77,11 @@
             <p class="fragment">Plugin Authors</p>
             <p class="fragment">Terrified of Gradle</p>
             <aside class="notes">
-                how many use gradle in hobby or work projects
-                plugin authors, or even written a custom gradle task
-                terrified: when you hear the word gradle a feeling of dread washes over you
+                how many use gradle in hobby or work projects?
+                how many are plugin authors, or even written a custom task
+                how many when you hear the word gradle a feeling of dread washes over you
                 my goal is to encourage more people to fall into that second category.
-                i may or may not be able to do something about the dread though.
+                I might not fix the dread though.
             </aside>
         </section>
         <section data-timing="90">
@@ -107,14 +107,15 @@
             <p class="fragment">Simplify standard usage</p>
             <p class="fragment">Without preventing customization</p>
             <aside class="notes">
-                Make the normal case turnkey, allow for customization
-                We will discuss how to achieve all of these using gradle plugins.
+                Everyone should understand WHAT the scripts do, but they shouldn't always need to know HOW.
+                Make the normal case turn-key, allow for customization.
+                I will show you how to achieve this using gradle plugins.
                 but first, lets get some background about our build tool
             </aside>
         </section>
         <section>
-            <section data-timing="30">
-                <h2>Maven vs Gradle</h2>
+            <section data-auto-animate data-timing="30">
+                <h1>Maven vs Gradle</h1>
                 <div class="grid-area">
                     <div class="fragment">
                         <h3>Maven</h3>
@@ -132,11 +133,12 @@
                     </div>
                 </div>
                 <aside class="notes">
+                    Maven is declarative. Gradle has a DSL.
                     with either tool, we can use plugins to abstract away complexity and follow DRY principles
-                    but the gradle DSL is a blessing and a curse
+                    The gradle DSL lets us break out of DSL and into imperative code: a blessing and a curse
                 </aside>
             </section>
-            <section data-timing="30">
+            <section data-auto-animate data-timing="30">
                 <h1>DSL</h1>
                 <aside class="notes">
                     Here, the DSL looks very declarative great right?
@@ -163,13 +165,12 @@ test {
 
                 </code></pre>
             </section>
-            <section>
+            <section data-auto-animate>
                 <h1>DSL</h1>
                 <aside class="notes">
-                    But say we need something a little custom
-                    This is a real customization of the dependencyUpdates plugin.
+                    But say we need something a little custom eg the dependencyUpdates plugin.
                     This is not declarative. There is a lot of code here. complexity. regex!
-                    so someone writes this, then everyone else copies this magical incantation,
+                    Once figured out, everyone else copies this magical incantation,
                     and if you ever want to change it, you have 1000 places you need to change it.
                 </aside>
                 <pre class="groovy"><code data-trim data-noescape>
@@ -195,35 +196,19 @@ tasks.named("dependencyUpdates").configure {
 }
                 </code></pre>
             </section>
-            <section data-timing="120">
+            <section data-auto-animate data-timing="120">
                 <h1>DSL</h1>
                 <aside class="notes">
-                    A gradle plugin can help you encapsulate shared/standard/conventional logic
-                    make it reusable, DRY
-                    the DSL is a slippery slope, so when do you use plugins?
-                    for anything that is repeated in multiple project's build scripts
-                    when everything is pluginified, then scripts are declarative
+                    The ideal is a one liner that lets us say "apply my org's standard depupdates plugin"
+                    Consider: imperative code, code repeated between projects
+                    when sufficiently pluginified, then scripts are declarative
                     Before we talk about how to make a plugin, we first need to understand how gradle works
                 </aside>
-                <pre class="groovy"><code data-trim data-noescape>
+                <pre class="groovy"><code data-trim data-noescape data-line-numbers="4">
                 plugins {
                   id "java"
                   id "jacoco"
                   id "com.myorg.gradle.depupdates"
-                }
-                repositories {
-                  mavenCentral()
-                }
-                dependencies {
-                  implementations("commons-io:commons-io:2.7")
-
-                  testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.+")
-                  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.+")
-                  testImplementation("org.junit.jupiter:junit-jupiter-params:5.4.+")
-                  testImplementation("org.assertj:assertj-core:3.23.1")
-                }
-                test {
-                  useJUnitPlatform()
                 }
                 </code></pre>
             </section>
@@ -623,12 +608,27 @@ class MyPlugin : Plugin&lt;Project> {
                 </code></pre>
             </section>
         </section>
-        <section data-timing="60">
-            <h1>Custom Wrapper</h1>
+        <section>
+            <section data-auto-animate data-timing="120">
+                <h1>Initialization Phase</h1>
+                <aside class="notes">
+                    init scripts have to be copied to each user's home dir
+                    settings plugins must be publicly accessible
+                    custom distro can be behind basic auth
+                </aside>
+                <ul>
+                    <li class="fragment">init scripts</li>
+                    <li class="fragment">Settings Plugin</li>
+                    <li class="fragment">Custom Wrapper Distribution</li>
+                </ul>
+            </section>
+        <section data-auto-animate data-timing="60">
+            <h1>Initialization Phase</h1>
             <ul>
                 <li class="fragment">pluginManagement (repo/plugins)</li>
                 <li class="fragment">Gradle Remote Build Cache</li>
             </ul>
+        </section>
         </section>
         <section data-timing="10">
             <aside class="notes">
