@@ -73,9 +73,9 @@
         </section>
         <section data-timing="90">
             <h1>About You</h1>
-            <p class="fragment">Gradle Users</p>
-            <p class="fragment">Plugin Authors</p>
-            <p class="fragment">Terrified of Gradle</p>
+            <h4 class="fragment">Gradle Users</h4>
+            <h4 class="fragment">Plugin Authors</h4>
+            <h4 class="fragment">Terrified of Gradle</h4>
             <aside class="notes">
                 how many use gradle in hobby or work projects?
                 how many are plugin authors, or even written a custom task
@@ -103,9 +103,12 @@
         </section>
         <section data-timing="60">
             <h1>The Goal</h1>
-            <p class="fragment">Abstract away the complexity</p>
-            <p class="fragment">Simplify standard usage</p>
-            <p class="fragment">Without preventing customization</p>
+            <ul>
+                <li class="fragment">Abstract away the complexity</li>
+                <li class="fragment">Simplify standard usage</li>
+                <li class="fragment">Without preventing customization</li>
+            </ul>
+
             <aside class="notes">
                 Everyone should understand WHAT the scripts do, but they shouldn't always need to know HOW.
                 Make the normal case turn-key, allow for customization.
@@ -400,7 +403,7 @@ tasks.named("dependencyUpdates").configure {
             </section>
             <section data-auto-animate>
                 <h1 data-id="title">Extensions</h1>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
+                <pre class="kotlin"><code data-trim data-noescape>
                     open class MyExtension(objects: ObjectFactory) {
                         companion object {
                             @JvmStatic
@@ -622,13 +625,13 @@ class MyPlugin : Plugin&lt;Project> {
                     <li class="fragment">Custom Wrapper Distribution</li>
                 </ul>
             </section>
-        <section data-auto-animate data-timing="60">
-            <h1>Initialization Phase</h1>
-            <ul>
-                <li class="fragment">pluginManagement (repo/plugins)</li>
-                <li class="fragment">Gradle Remote Build Cache</li>
-            </ul>
-        </section>
+            <section data-auto-animate data-timing="60">
+                <h1>Initialization Phase</h1>
+                <ul>
+                    <li class="fragment">pluginManagement (repo/plugins)</li>
+                    <li class="fragment">Gradle Remote Build Cache</li>
+                </ul>
+            </section>
         </section>
         <section data-timing="10">
             <aside class="notes">
