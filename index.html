@@ -438,7 +438,7 @@ tasks.named("dependencyUpdates").configure {
             </section>
             <section data-auto-animate>
                 <h1>Plugins</h1>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
+                <pre class="kotlin"><code data-trim data-noescape>
 class MyPlugin : Plugin&lt;Project> {
     override fun apply(project: Project) {
     }
@@ -448,7 +448,7 @@ class MyPlugin : Plugin&lt;Project> {
             <section data-auto-animate>
                 <h1>Plugins</h1>
                 <h3>Apply Tasks & Extensions</h3>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
+                <pre class="kotlin"><code data-trim data-noescape>
 class MyPlugin : Plugin&lt;Project> {
     override fun apply(project: Project) {
         val ext = MyExtension.create(project)
@@ -460,7 +460,7 @@ class MyPlugin : Plugin&lt;Project> {
             <section data-auto-animate>
                 <h1>Plugins</h1>
                 <h3>Apply Other Plugins</h3>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
+                <pre class="kotlin"><code data-trim data-noescape>
 class MyPlugin : Plugin&lt;Project> {
     override fun apply(project: Project) {
         project.pluginManager.apply(JavaPlugin::class.java)
@@ -471,7 +471,7 @@ class MyPlugin : Plugin&lt;Project> {
             <section data-auto-animate>
                 <h1>Plugins</h1>
                 <h3>React to Other Plugins</h3>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
+                <pre class="kotlin"><code data-trim data-noescape>
 class MyPlugin : Plugin&lt;Project> {
     override fun apply(project: Project) {
         project.pluginManager.withType(JavaPlugin::class) {
