@@ -284,15 +284,15 @@ tasks.named("dependencyUpdates").configure {
             </section>
         </section>
         <section>
-            <section data-auto-animate>
+            <section data-auto-animate  data-timing="10">
                 <h1>Tasks</h1>
                 <h3>Workhorse of the Execution phase</h3>
             </section>
-            <section data-auto-animate>
+            <section data-auto-animate data-timing="10">
                 <h1>Tasks</h1>
                 <h3>Inputs -> TaskAction -> Outputs</h3>
             </section>
-            <section data-auto-animate>
+            <section data-auto-animate data-timing="45">
                 <h1 data-id="title">Tasks</h1>
                 <aside class="notes">
                     The TaskAction is what the task does when it runs.
@@ -314,7 +314,7 @@ tasks.named("dependencyUpdates").configure {
                     }
                 </code></pre>
             </section>
-            <section data-auto-animate>
+            <section data-auto-animate data-timing="60">
                 <h1 data-id="title">Tasks</h1>
                 <h3 data-id="subtitle">Companion Object</h3>
                 <aside class="notes">
@@ -343,7 +343,7 @@ tasks.named("dependencyUpdates").configure {
                     }
                 </code></pre>
             </section>
-            <section data-auto-animate>
+            <section data-auto-animate data-timing="10">
                 <h1 data-id="title">Tasks</h1>
                 <h3 data-id="subtitle">Companion Object</h3>
                 <aside class="notes">
@@ -366,7 +366,7 @@ tasks.named("dependencyUpdates").configure {
                     }
                 </code></pre>
             </section>
-            <section data-auto-animate>
+            <section data-auto-animate data-timing="10">
                 <h1 data-id="title">Tasks</h1>
                 <h3 data-id="subtitle">Companion Object</h3>
                 <aside class="notes">
@@ -386,7 +386,7 @@ tasks.named("dependencyUpdates").configure {
                     }
                 </code></pre>
             </section>
-            <section data-auto-animate>
+            <section data-auto-animate data-timing="10">
                 <h1 data-id="title">Tasks</h1>
                 <h3 data-id="subtitle">Companion Object</h3>
                 <aside class="notes">
@@ -398,9 +398,9 @@ tasks.named("dependencyUpdates").configure {
                             @JvmStatic
                             fun create(project: Project,
                                        taskName: String = "myTask"): MyTask {
+                                val ext = project.extensions.findByType&lt;MyExtension>()
                                 return project.tasks.create&lt;MyTask>(taskName).apply {
-                                    project.extensions.findByType&lt;MyExtension>()
-                                        ?.input.set(it.myTaskOutputName)
+                                    input.set(ext.setting)
                                 }
                             }
                         }
