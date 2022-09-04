@@ -201,7 +201,7 @@ tasks.named("dependencyUpdates").configure {
 }
                 </code></pre>
             </section>
-            <section data-auto-animate data-timing="120">
+            <section data-auto-animate data-timing="60">
                 <h1>DSL</h1>
                 <aside class="notes">
                     The ideal is a one liner that lets us say "apply my org's standard depupdates plugin"
@@ -278,7 +278,7 @@ tasks.named("dependencyUpdates").configure {
             </section>
         </section>
         <section>
-            <section data-auto-animate data-timing="30">
+            <section data-auto-animate data-timing="45">
                 <h1>Building Blocks</h1>
                 <h3 class="fragment">Tasks</h3>
                 <h3 class="fragment">Extensions</h3>
@@ -286,19 +286,23 @@ tasks.named("dependencyUpdates").configure {
             </section>
         </section>
         <section>
-            <section data-auto-animate  data-timing="10">
+            <section data-auto-animate  data-timing="30">
                 <h1>Tasks</h1>
                 <h3>Workhorse of the Execution phase</h3>
+                <aside class="notes">
+                    TaskGraph
+                </aside>
             </section>
             <section data-auto-animate data-timing="10">
                 <h1>Tasks</h1>
                 <h3>Inputs -> TaskAction -> Outputs</h3>
             </section>
-            <section data-auto-animate data-timing="45">
+            <section data-auto-animate data-timing="90">
                 <h1 data-id="title">Tasks</h1>
                 <aside class="notes">
                     The TaskAction is what the task does when it runs.
                     To define inputs and outputs, we use annotated properties
+                    Property API
                     unopinionated
                 </aside>
                 <pre data-id="code" class="kotlin"><code data-trim data-noescape>
@@ -388,13 +392,13 @@ tasks.named("dependencyUpdates").configure {
                     }
                 </code></pre>
             </section>
-            <section data-auto-animate data-timing="10">
+            <section data-auto-animate data-timing="15">
                 <h1 data-id="title">Tasks</h1>
                 <h3 data-id="subtitle">Companion Object</h3>
                 <aside class="notes">
-                    bind properties to extension properties
+                    bind properties to extension properties, best way to pass config from ext to tasks
                 </aside>
-                <pre data-id="code" class="kotlin"><code data-trim data-noescape data-line-numbers="7-9">
+                <pre data-id="code" class="kotlin"><code data-trim data-noescape data-line-numbers="6-9">
                     abstract class MyTask : DefaultTask() {
                         companion object {
                             @JvmStatic
@@ -434,6 +438,11 @@ tasks.named("dependencyUpdates").configure {
                         }
                     }
                 </code></pre>
+                <aside class="notes">
+                    needs some boiler plate to create properties
+                    use companion object to apply opinions
+                    create functions to set values on your property: ideomatic gradle
+                </aside>
             </section>
             <section data-auto-animate>
                 <h1 data-id="title">Extensions</h1>
@@ -446,11 +455,11 @@ tasks.named("dependencyUpdates").configure {
             </section>
         </section>
         <section>
-            <section data-auto-animate>
+            <section data-auto-animate data-timing="15">
                 <h1>Plugins</h1>
                 <h3>Workhorse of the Configuration Phase</h3>
             </section>
-            <section data-auto-animate>
+            <section data-auto-animate data-timing="15">
                 <h1>Plugins</h1>
                 <pre class="kotlin"><code data-trim data-noescape>
 class MyPlugin : Plugin&lt;Project> {
@@ -459,7 +468,7 @@ class MyPlugin : Plugin&lt;Project> {
 }
                 </code></pre>
             </section>
-            <section data-auto-animate>
+            <section data-auto-animate data-timing="30">
                 <h1>Plugins</h1>
                 <h3>Apply Tasks & Extensions</h3>
                 <pre class="kotlin"><code data-trim data-noescape>
@@ -503,9 +512,23 @@ class MyPlugin : Plugin&lt;Project> {
                 </code></pre>
             </section>
         </section>
-        <section>
-            <section><h1>Best Practices</h1></section>
-            <section><h2>Avoid afterEvaluate</h2>
+        <section data-timing="30">
+            <section data-auto-animate>
+                <h1>Best Practices</h1>
+            </section>
+            <section data-auto-animate data-timing="60">
+                <h2>Avoid afterEvaluate</h2>
+                <aside class="notes">
+                    afterEvaluate will run your code after the config phase
+                    creates race conditions
+                    used to be necessary evil
+                    Property has mostly eliminated the need.
+                    exception: when declaring task dependencies on dynamic tasks
+                </aside>
+            </section>
+            <section data-auto-animate data-timing="90">
+                <h2>Avoid afterEvaluate</h2>
+                <h3>Declaring task dependencies on dynamic tasks</h3>
                 <aside class="notes">
                     exception: when declaring task dependencies on dynamic tasks
                 </aside>
@@ -522,31 +545,21 @@ class MyPlugin : Plugin&lt;Project> {
 }
                 </code></pre>
             </section>
-            <section><h2>Project Properties</h2>
+            <section data-auto-animate data-timing="60">
+                <h2>Project Properties</h2>
                 <aside class="notes">
-                    Do NOT read extension properties in plugin code. if they are set in buildscript, that will not have been evaluated yet
+                    we already talked about using extension props to get buildscript config to your tasks
+                    but plugin code runs before buildscripts are evaluated so cant use extensions
                 </aside>
                 <ul>
                     <li class="fragment">Use extension properties when used in task logic</li>
                     <li class="fragment">Do NOT read extension properties in plugin code</li>
                     <li class="fragment">Use project properties when used in plugin logic</li>
                 </ul>
+
             </section>
-            <section>
-                <h1>Implementation</h1>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
-class MyPlugin : Plugin&lt;Project> {
-    override fun apply(project: Project) {
-        if(!project.hasProperty("my.enabled")
-            || project.property("my.enabled")){
-                    // plugin code
-        }
-    }
-}
-                </code></pre>
-            </section>
-            <section>
-                <h2>Usage</h2>
+            <section data-auto-animate data-timing="30">
+                <h2>Project Properties</h2>
                 <div class="fragment">
                     <h3>gradle.properties</h3>
                     <pre class="properties"><code data-trim data-noescape>
@@ -560,18 +573,48 @@ class MyPlugin : Plugin&lt;Project> {
                 </code></pre>
                 </div>
             </section>
+            <section data-timing="30">
+                <h1>Implementation</h1>
+                <pre class="kotlin"><code data-trim data-noescape>
+class MyPlugin : Plugin&lt;Project> {
+    override fun apply(project: Project) {
+        if(!project.hasProperty("my.enabled")
+            || project.property("my.enabled")){
+                    // plugin code
+        }
+    }
+}
+                </code></pre>
+                <aside class="notes">
+                    always check hasProperty. if it doesnt exist it will throw exception, not return null
+                </aside>
+            </section>
         </section>
         <section>
-            <section data-timing="10" data-auto-animate><h1>Testing</h1></section>
-            <section data-timing="60" data-auto-animate>
+            <section data-timing="10" data-auto-animate><h1>Testing</h1>
+                <aside class="notes">
+                    Now that we have context on how to build plugins, we can talk about how to test (one of our goals)
+                </aside>
+            </section>
+            <section data-timing="15" data-auto-animate>
                 <h1 data-id="title">Testing</h1>
                 <h3 data-id="subtitle">Unit Tests</h3>
+                <aside class="notes">
+                    unit test helper functions same as always
+                </aside>
+            </section>
+            <section data-timing="60" data-auto-animate>
+                <h1 data-id="title">Testing</h1>
+                <h3 data-id="subtitle">Component Tests</h3>
                 <ul>
                     <li class="fragment">Programmatic access to Project model</li>
                     <li class="fragment">Good for checking configuration</li>
                     <li class="fragment">If you run tasks, run them directly</li>
                     <li class="fragment">Avoid causing dependencies to resolve</li>
                 </ul>
+                <aside class="notes">
+                    certain gradle object like tasks/plugins only work in the context of a project
+                </aside>
             </section>
             <section data-timing="30" data-auto-animate>
                 <h1 data-id="title">Testing</h1>
