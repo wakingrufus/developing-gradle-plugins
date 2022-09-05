@@ -550,13 +550,13 @@ class MyPlugin : Plugin&lt;Project> {
                 <aside class="notes">
                     we already talked about using extension props to get buildscript config to your tasks
                     but plugin code runs before buildscripts are evaluated so cant use extensions
+                    TODO: add a visualization of this problem before this slide
                 </aside>
                 <ul>
                     <li class="fragment">Use extension properties when used in task logic</li>
                     <li class="fragment">Do NOT read extension properties in plugin code</li>
                     <li class="fragment">Use project properties when used in plugin logic</li>
                 </ul>
-
             </section>
             <section data-auto-animate data-timing="30">
                 <h2>Project Properties</h2>
@@ -603,22 +603,22 @@ class MyPlugin : Plugin&lt;Project> {
                     unit test helper functions same as always
                 </aside>
             </section>
-            <section data-timing="60" data-auto-animate>
+            <section data-timing="90" data-auto-animate>
                 <h1 data-id="title">Testing</h1>
                 <h3 data-id="subtitle">Component Tests</h3>
                 <ul>
                     <li class="fragment">Programmatic access to Project model</li>
                     <li class="fragment">Good for checking configuration</li>
-                    <li class="fragment">If you run tasks, run them directly</li>
+                    <li class="fragment">If you run tasks, invoke them directly</li>
                     <li class="fragment">Avoid causing dependencies to resolve</li>
                 </ul>
                 <aside class="notes">
                     certain gradle object like tasks/plugins only work in the context of a project
                 </aside>
             </section>
-            <section data-timing="30" data-auto-animate>
+            <section data-timing="60" data-auto-animate>
                 <h1 data-id="title">Testing</h1>
-                <h3 data-id="subtitle">Unit Tests</h3>
+                <h3 data-id="subtitle">Component Tests</h3>
                 <pre class="kotlin"><code data-trim data-noescape>
         val rootProject = ProjectBuilder.builder().build() as ProjectInternal
         val subProject = ProjectBuilder.builder()
@@ -639,11 +639,15 @@ class MyPlugin : Plugin&lt;Project> {
                 <h1 data-id="title">Testing</h1>
                 <h3 data-id="subtitle">Integration Tests</h3>
                 <ul data-id="body">
+                    <li class="fragment">Use Gradle TestKit</li>
                     <li class="fragment">Run a whole gradle build</li>
                     <li class="fragment">works on gradle scripts you write to a temp dir</li>
                     <li class="fragment">Pass in gradle version to use</li>
                     <li class="fragment">parameterize to test multiple gradle verisons</li>
                 </ul>
+                <aside class="notes">
+                    TestKit applied automatically by java-gradle-plugin
+                </aside>
             </section>
             <section data-auto-animate>
                 <h1 data-id="title">Testing</h1>
@@ -666,24 +670,80 @@ class MyPlugin : Plugin&lt;Project> {
 
                 assertThat(buildResult.task(":myTask")?.outcome).isEqualTo(SUCCESS)
                 </code></pre>
+                <aside class="notes">
+                    no access to Project API
+                    we have BuildResult which has build output and TaskResult objects
+                </aside>
             </section>
         </section>
         <section>
             <section data-auto-animate data-timing="120">
-                <h1>Initialization Phase</h1>
-                <aside class="notes">
-                    init scripts have to be copied to each user's home dir
-                    settings plugins must be publicly accessible
-                    custom distro can be behind basic auth
-                </aside>
+                <h2>Initialization Phase</h2>
                 <ul>
                     <li class="fragment">init scripts</li>
                     <li class="fragment">Settings Plugin</li>
                     <li class="fragment">Custom Wrapper Distribution</li>
                 </ul>
+                <aside class="notes">
+                    we have discussed using plugins, extensions, tasks to commonize your config and exec phases
+                    but what about the init phase, such as settings.gradle?
+                    init scripts have to be copied to each user's home dir, applied to every project
+                    settings plugins must be publicly accessible
+                    custom distro can be behind basic auth
+                </aside>
+            </section>
+            <section data-auto-animate data-timing="30">
+                <h2>Initialization Phase</h2>
+                <h3>Gradle Wrapper</h3>
+                <aside class="notes">
+                    Install gradle locally to your project to isolate your project from dev env
+                </aside>
+                <pre data-id="body" class="fragment kotlin"><code data-trim data-noescape>
+                wrapper {
+                    gradleVersion = "7.5.1"
+                }
+                     </code></pre>
+                <pre data-id="body" class="fragment bash"><code data-trim data-noescape>gradle wrapper</code></pre>
+            </section>
+            <section data-auto-animate data-timing="30">
+                <h2>Initialization Phase</h2>
+                <h3>Gradle Wrapper</h3>
+                <aside class="notes">
+                    Install gradle locally to your project to isolate your project from dev env
+                </aside>
+                <pre data-id="body" class="kotlin"><code data-trim data-noescape>
+                wrapper {
+                    gradleVersion = "7.5.1"
+                }
+                     </code></pre>
+                <pre data-id="body" class="bash"><code data-trim data-noescape>./gradlew build</code></pre>
             </section>
             <section data-auto-animate data-timing="60">
-                <h1>Initialization Phase</h1>
+                <h2>Initialization Phase</h2>
+                <h3>Custom Gradle Wrapper</h3>
+                <aside class="notes">
+                    Install gradle locally to your project to isolate your project from dev env
+                </aside>
+                <span>Base Gradle Wrapper</span>
+                <span>+ init scripts</span>
+                <pre data-id="body" class="kotlin"><code data-trim data-noescape>
+                    wrapper {
+                      distributionUrl(
+                        "https://myorg.com/wrapper/gradle-7.5.1-mywrapper-2.1.0.zip"
+                      )
+                    }
+                     </code></pre>
+            </section>
+            <section data-auto-animate data-timing="30">
+                <h2>Initialization Phase</h2>
+                <h3>Custom Gradle Wrapper</h3>
+                <aside class="notes">
+                    Use this plugin to make generating these easy
+                </aside>
+                <span>tech.harmonysoft.oss.custom-gradle-dist-plugin</span>
+            </section>
+            <section data-auto-animate data-timing="90">
+                <h2>Initialization Phase</h2>
                 <ul>
                     <li class="fragment">pluginManagement (repo/plugins)</li>
                     <li class="fragment">Gradle Remote Build Cache</li>
