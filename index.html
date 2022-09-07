@@ -278,6 +278,91 @@ tasks.named("dependencyUpdates").configure {
             </section>
         </section>
         <section>
+            <section data-auto-animate data-timing="30">
+                <h1>Project Setup</h1>
+                <aside class="notes">
+                    Whether in buildSrc or a separate project, the way to set up a plugin project is the same.
+                    kotlin jvm plugin
+                </aside>
+                <pre class="kotlin fragment" data-auto-animate-id="sample"><code data-trim data-noescape data-line-numbers="2">
+                plugins {
+                    kotlin("jvm")
+                    `kotlin-dsl`
+                    `java-gradle-plugin`
+                }
+                </code></pre>
+            </section>
+            <section data-auto-animate data-timing="15">
+                <h1>Project Setup</h1>
+                <aside class="notes">
+                    The kotlin-dsl plugin gives us access to the gradle kotlin DSL,
+                    which makes interacting with gradle project via kotlin more ideomatic
+                </aside>
+                <pre class="kotlin" data-auto-animate-id="sample"><code data-trim data-noescape data-line-numbers="3">
+                plugins {
+                    kotlin("jvm")
+                    `kotlin-dsl`
+                    `java-gradle-plugin`
+                }
+                </code></pre>
+            </section>
+            <section data-auto-animate data-timing="15">
+                <h1>Project Setup</h1>
+                <aside class="notes">
+                    The java-gradle-plugin adds gradle api and test kit dependencies and allows us to package a gradle plugin
+                </aside>
+                <pre class="kotlin" data-auto-animate-id="sample"><code data-trim data-noescape data-line-numbers="4">
+                plugins {
+                    kotlin("jvm")
+                    `kotlin-dsl`
+                    `java-gradle-plugin`
+                }
+                </code></pre>
+            </section>
+            <section data-auto-animate data-timing="30">
+                <h1>Project Setup</h1>
+                <aside class="notes">
+                    Declare the id which will be used to apply your plugin to a project
+                </aside>
+                <pre class="kotlin" data-auto-animate-id="sample"><code data-trim data-noescape data-line-numbers="9">
+                plugins {
+                    kotlin("jvm")
+                    `kotlin-dsl`
+                    `java-gradle-plugin`
+                }
+                gradlePlugin {
+                    plugins {
+                        create("myPlugin") {
+                            id = "com.myorg.myplugin"
+                            implementationClass = "com.myorg.myplugin.MyPlugin"
+                        }
+                    }
+                }
+                </code></pre>
+            </section>
+            <section data-auto-animate data-timing="30">
+                <h1>Project Setup</h1>
+                <aside class="notes">
+                    Reference your Plugin class
+                </aside>
+                <pre class="kotlin" data-auto-animate-id="sample"><code data-trim data-noescape data-line-numbers="10">
+                plugins {
+                    kotlin("jvm")
+                    `kotlin-dsl`
+                    `java-gradle-plugin`
+                }
+                gradlePlugin {
+                    plugins {
+                        create("myPlugin") {
+                            id = "com.myorg.myplugin"
+                            implementationClass = "com.myorg.myplugin.MyPlugin"
+                        }
+                    }
+                }
+                </code></pre>
+            </section>
+        </section>
+        <section>
             <section data-auto-animate data-timing="45">
                 <h1>Building Blocks</h1>
                 <h3 class="fragment">Tasks</h3>
