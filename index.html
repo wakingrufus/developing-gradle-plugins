@@ -62,13 +62,18 @@
                     <p class="inline-image"><img alt="fediverse logo" src="fediverse.png" height="48" width="48"/>
                         <span style="padding-left: .5em">@wakingrufus@mastodon.technology</span>
                     </p>
+                    <p class="inline-image"><img alt="github logo" src="github-logo.png" height="48" width="48"/>
+                        <span style="padding-left: .5em">wakingrufus</span>
+                    </p>
                 </div>
             </div>
         </section>
         <section data-timing="60">
-            <h1>About GrubHub</h1>
             <img alt="GrubHub logo" src="gh-logo.png" height="194" width="688">
             <aside class="notes">
+                HQ is chicago
+                We aren't a SV VC backed money dumpster fire,
+                we have been publicly traded and operating off our own revenue and profits since 2014
                 What I do: Service Platform Engineering: JVM Stewardship
             </aside>
             <ul>
@@ -225,7 +230,7 @@ tasks.named("dependencyUpdates").configure {
             </section>
         </section>
         <section>
-            <section data-timing="120">
+            <section data-timing="100">
                 <h1>Gradle lifecycle</h1>
                 <aside class="notes">
                     Gradle builds run in 3 phases
@@ -543,6 +548,11 @@ tasks.named("dependencyUpdates").configure {
                         name("customName")
                     }
                 </code></pre>
+                <pre class="kotlin fragment"><code data-trim data-noescape>
+                    extensions.findByType&lt;MyExtension>() {
+                        name("customName")
+                    }
+                </code></pre>
             </section>
         </section>
         <section>
@@ -726,7 +736,7 @@ class MyPlugin : Plugin&lt;Project> {
         subProject.tasks.findByName("myTask").doWork()
                 </code></pre>
             </section>
-            <section data-auto-animate>
+            <section data-auto-animate data-timing="60" >
                 <h1 data-id="title">Testing</h1>
                 <h3 data-id="subtitle">Integration Tests</h3>
                 <ul data-id="body">
@@ -740,7 +750,7 @@ class MyPlugin : Plugin&lt;Project> {
                     TestKit applied automatically by java-gradle-plugin
                 </aside>
             </section>
-            <section data-auto-animate>
+            <section data-auto-animate data-timing="90">
                 <h1 data-id="title">Testing</h1>
                 <h3 data-id="subtitle">Integration Tests</h3>
                 <pre data-id="body" class="kotlin"><code data-trim data-noescape>
@@ -762,6 +772,7 @@ class MyPlugin : Plugin&lt;Project> {
                 assertThat(buildResult.task(":myTask")?.outcome).isEqualTo(SUCCESS)
                 </code></pre>
                 <aside class="notes">
+                    im leaving out unit test framework wiring
                     no access to Project API
                     we have BuildResult which has build output and TaskResult objects
                 </aside>
@@ -848,7 +859,7 @@ class MyPlugin : Plugin&lt;Project> {
             <img alt="Red Swingline stapler" src="stapler.png" height="500" width="500"/>
         </section>
         <section data-timing="10">
-            <img alt="necronomicon but with the gradle logo" src="gradlenomicon.jpg" height="466" width="386">
+            <img alt="necronomicon but with the gradle logo" src="gradlenomicon.jpg" height="460" width="382">
             <div class="grid-area">
                 <div style="text-align: left">
                     <div>wakingrufus.github.io/developing-gradle-plugins/</div>
