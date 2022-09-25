@@ -72,7 +72,6 @@
             <img alt="GrubHub logo" src="gh-logo.png" height="194" width="688">
             <aside class="notes">
                 HQ is chicago
-                We aren't a SV VC backed money dumpster fire,
                 we have been publicly traded and operating off our own revenue and profits since 2014
                 What I do: Service Platform Engineering: JVM Stewardship
             </aside>
@@ -80,6 +79,7 @@
                 <li>Fully Remote and Hybrid Remote Roles</li>
                 <li>Unlimited PTO</li>
                 <li>8-16 weeks of parental leave</li>
+                <li>4.5 day work week</li>
             </ul>
         </section>
         <section data-timing="90">
@@ -230,12 +230,13 @@ tasks.named("dependencyUpdates").configure {
             </section>
         </section>
         <section>
-            <section data-timing="100">
+            <section data-timing="120">
                 <h1>Gradle lifecycle</h1>
                 <aside class="notes">
                     Gradle builds run in 3 phases
                     buildSrc is your incubator. it is a great place to try writing custom tasks and plugins before
                     pulling them out to a separate codebase / artifact
+                    spring blog: https://spring.io/blog/2020/06/08/migrating-spring-boot-s-build-to-gradle
                 </aside>
                 <div class="grid-area">
                     <div class="fragment">
@@ -535,7 +536,7 @@ tasks.named("dependencyUpdates").configure {
                     }
                 </code></pre>
                 <aside class="notes">
-                    needs some boiler plate to create properties
+                    needs some boilerplate to create properties
                     use companion object to apply opinions
                     create functions to set values on your property: ideomatic gradle
                 </aside>
@@ -623,25 +624,39 @@ class MyPlugin : Plugin&lt;Project> {
                     afterEvaluate will run your code after the config phase
                     creates race conditions
                     used to be necessary evil
-                    Property has mostly eliminated the need.
-                    exception: when declaring task dependencies on dynamic tasks
+                    Property has MOSTLY eliminated the need.
                 </aside>
             </section>
-            <section data-auto-animate data-timing="90">
+            <section data-auto-animate data-timing="30">
                 <h2>Avoid afterEvaluate</h2>
-                <h3>Declaring task dependencies on dynamic tasks</h3>
+                <h3>Don't</h3>
                 <aside class="notes">
-                    exception: when declaring task dependencies on dynamic tasks
+                    extension values set in scripts not set until after configuration phase
                 </aside>
-                <pre class="kotlin fragment"><code data-trim data-noescape>
+                <pre class="kotlin"><code data-trim data-noescape>
 class MyPlugin : Plugin&lt;Project> {
   override fun apply(project: Project) {
+    val ext = MyExtension.create(project)
     val task = MyTask.create(project)
     project.afterEvaluate {
-      project.tasks
-        .findByName("publishMavenJavaPublicationToMavenRepository")
-        .dependsOn(task)
+      task.inputFile = ext.inputFile
     }
+  }
+}
+                </code></pre>
+            </section>
+            <section data-auto-animate data-timing="30">
+                <h2>Avoid afterEvaluate</h2>
+                <h3>Instead Do</h3>
+                <aside class="notes">
+                    use properties to bind the value
+                </aside>
+                <pre class="kotlin"><code data-trim data-noescape>
+class MyPlugin : Plugin&lt;Project> {
+  override fun apply(project: Project) {
+    val ext = MyExtension.create(project)
+    val task = MyTask.create(project)
+    task.inputFile.set(ext.inputFile) // bind properties
   }
 }
                 </code></pre>
@@ -661,7 +676,7 @@ class MyPlugin : Plugin&lt;Project> {
             </section>
             <section data-auto-animate data-timing="30">
                 <h2>Project Properties</h2>
-                <div class="fragment">
+                <div class="">
                     <h3>gradle.properties</h3>
                     <pre class="properties"><code data-trim data-noescape>
                     my.enabled=false
@@ -689,6 +704,10 @@ class MyPlugin : Plugin&lt;Project> {
                 <aside class="notes">
                     always check hasProperty. if it doesnt exist it will throw exception, not return null
                 </aside>
+            </section>
+            <section>
+                <h2>More Best Practices</h2>
+                <p><a href="https://github.com/liutikas/gradle-best-practices">https://github.com/liutikas/gradle-best-practices</a> </p>
             </section>
         </section>
         <section>
@@ -859,7 +878,7 @@ class MyPlugin : Plugin&lt;Project> {
             <img alt="Red Swingline stapler" src="stapler.png" height="500" width="500"/>
         </section>
         <section data-timing="10">
-            <img alt="necronomicon but with the gradle logo" src="gradlenomicon.jpg" height="460" width="382">
+            <img alt="necronomicon but with the gradle logo" src="gradlenomicon.jpg" height="230" width="190">
             <div class="grid-area">
                 <div style="text-align: left">
                     <div>wakingrufus.github.io/developing-gradle-plugins/</div>
